@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold text-dark">Reports Central</h1>
+        <p class="text-muted">Access all generated Business Intelligence and Predictive reports</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Dataset Intelligence Reports</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Dataset Source</th>
+                                <th>Analytics Report</th>
+                                <th>Forecasting Report</th>
+                                <th class="text-end pe-4">Dataset Hub</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dataset in datasets %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-3 bg-dark bg-opacity-10 p-2 me-3">
+                                            <i class="fas fa-file-csv text-dark"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ dataset.original_name }}</div>
+                                            <small class="text-muted">Uploaded {{
+                                                dataset.upload_date.strftime('%Y-%m-%d') }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('analytics.download_report', dataset_id=dataset.id) }}"
+                                        class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        <i class="fas fa-file-pdf me-1"></i>EDA Report
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('forecasting.download_forecast_report', dataset_id=dataset.id) }}"
+                                        class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                        <i class="fas fa-magic me-1"></i>Forecast Report
+                                    </a>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{{ url_for('analytics.dataset_hub', dataset_id=dataset.id) }}"
+                                        class="btn btn-sm btn-dark rounded-pill px-3">
+                                        Manage Dataset <i class="fas fa-external-link-alt ms-1 small"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">No datasets available. Upload data
+                                    to generate reports.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.02);
+    }
+</style>
+{% endblock %}

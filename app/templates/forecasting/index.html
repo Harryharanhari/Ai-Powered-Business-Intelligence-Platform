@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-6">
+        <h1 class="h2 fw-bold text-dark">ML Forecasting: <span class="text-primary">{{ dataset.original_name }}</span>
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4">
+            <h5 class="fw-bold mb-4">Configure Forecast</h5>
+            <form action="{{ url_for('forecasting.run_forecast', dataset_id=dataset.id) }}" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Date Column</label>
+                    <select name="date_col" class="form-select bg-light border-0" required>
+                        {% for col in columns %}
+                        <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Choose the time-series index column</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Target KPI Column</label>
+                    <select name="target_col" class="form-select bg-light border-0" required>
+                        {% for col in columns %}
+                        <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Choose the value you want to predict</small>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Forecast Horizon (Days)</label>
+                    <div class="range-wrap">
+                        <input type="range" name="periods" class="form-range" min="7" max="365" step="7" value="30"
+                            id="periodsRange">
+                        <div class="text-center fw-bold text-primary"><span id="periodsValue">30</span> Days</div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Model Selection</label>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="model_type" id="modelProphet" value="prophet"
+                                checked>
+                            <label class="btn btn-outline-primary w-100 py-3" for="modelProphet">
+                                <i class="fas fa-chart-line mb-2 d-block fa-2x"></i>
+                                Prophet
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="model_type" id="modelLSTM" value="lstm">
+                            <label class="btn btn-outline-success w-100 py-3" for="modelLSTM">
+                                <i class="fas fa-network-wired mb-2 d-block fa-2x"></i>
+                                LSTM
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm" id="btnRun">
+                        <i class="fas fa-play me-2"></i>Run Forecasting
+                    </button>
+                    <div class="text-center mt-3 d-none" id="loader">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 mb-0">Training Model...</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100 bg-primary text-white p-5 overflow-hidden position-relative">
+            <div class="position-absolute top-0 end-0 p-4 opacity-25">
+                <i class="fas fa-rocket fa-9x rotate-12"></i>
+            </div>
+            <div class="position-relative">
+                <h3 class="fw-bold">Intelligent Forecasting</h3>
+                <p class="lead opacity-75">
+                    Our platform uses Enterprise-grade Prophet (Meta) and Deep Learning LSTM models to give you the most
+                    accurate business predictions.
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Seasonal Decomposition</li>
+                    <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Holiday Effect Detection</li>
+                    <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Trend Identification</li>
+                    <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Confidence Intervals</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const periodsRange = document.getElementById('periodsRange');
+    const periodsValue = document.getElementById('periodsValue');
+    const btnRun = document.getElementById('btnRun');
+    const loader = document.getElementById('loader');
+
+    periodsRange.addEventListener('input', (e) => {
+        periodsValue.textContent = e.target.value;
+    });
+
+    document.querySelector('form').addEventListener('submit', () => {
+        btnRun.classList.add('d-none');
+        loader.classList.remove('d-none');
+    });
+</script>
+{% endblock %}

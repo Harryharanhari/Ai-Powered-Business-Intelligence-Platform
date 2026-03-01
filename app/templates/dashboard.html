@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h1 class="h2 fw-bold text-dark">Enterprise Dashboard</h1>
+        <p class="text-muted">Welcome back, {{ current_user.username }}! Here is your business overview.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-4 border-start border-primary border-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted text-uppercase fw-bold">Active Datasets</small>
+                    <h3 class="fw-bold mb-0">{{ stats.datasets }}</h3>
+                </div>
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                    <i class="fas fa-database text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-4 border-start border-success border-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted text-uppercase fw-bold">Total Forecasts</small>
+                    <h3 class="fw-bold mb-0">{{ stats.forecasts }}</h3>
+                </div>
+                <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                    <i class="fas fa-magic text-success"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-4 border-start border-info border-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted text-uppercase fw-bold">AI Queries</small>
+                    <h3 class="fw-bold mb-0">{{ stats.queries }}</h3>
+                </div>
+                <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                    <i class="fas fa-comment-dots text-info"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-4 border-start border-warning border-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted text-uppercase fw-bold">Anomalies</small>
+                    <h3 class="fw-bold mb-0">{{ stats.anomalies }}</h3>
+                </div>
+                <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">Recent Datasets</h5>
+                <a href="{{ url_for('analytics.list_datasets') }}" class="btn btn-sm btn-link text-decoration-none">View
+                    All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <tbody class="border-top-0">
+                            {% for dataset in recent_datasets %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-file-csv text-primary me-3"></i>
+                                        <div>
+                                            <div class="fw-bold">{{ dataset.original_name }}</div>
+                                            <small class="text-muted">{{ dataset.upload_date.strftime('%Y-%m-%d')
+                                                }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{{ url_for('analytics.eda', dataset_id=dataset.id) }}"
+                                        class="btn btn-sm btn-light rounded-pill">Analyze</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center py-4">No datasets uploaded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4 bg-primary text-white p-4">
+            <h5 class="fw-bold">Ready for Insights?</h5>
+            <p class="small opacity-75">Upload a new dataset to get started with AI-driven business intelligence.</p>
+            <a href="{{ url_for('analytics.upload') }}" class="btn btn-light text-primary fw-bold rounded-pill w-100">
+                <i class="fas fa-plus me-2"></i>Upload New
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Quick Actions</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('forecasting.index') }}" class="list-group-item list-group-item-action py-3">
+                        <i class="fas fa-magic text-success me-3"></i>Run Forecast
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3">
+                        <i class="fas fa-file-pdf text-danger me-3"></i>Export All Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm border-0 p-5">
+            <div class="text-center mb-5">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-4 mx-auto mb-4"
+                    style="width: 100px; height: 100px;">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-primary mt-2"></i>
+                </div>
+                <h2 class="fw-bold">Upload Dataset</h2>
+                <p class="text-muted">Upload your CSV file to begin automated enterprise analysis</p>
+            </div>
+
+            <form action="{{ url_for('analytics.upload') }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <div class="upload-area border-2 border-dashed rounded-4 p-5 text-center bg-light cursor-pointer"
+                        id="dropArea">
+                        <input type="file" name="file" id="fileInput" class="d-none" accept=".csv">
+                        <div id="fileInfo">
+                            <i class="fas fa-file-csv fa-4x text-muted mb-3"></i>
+                            <h5 class="text-dark">Click to select or drag & drop CSV</h5>
+                            <p class="small text-muted mb-0">Maximum file size: 16MB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm py-3 fw-bold">
+                        <i class="fas fa-rocket me-2"></i>Process Dataset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+
+    dropArea.addEventListener('click', () => fileInput.click());
+
+    dropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropArea.classList.add('bg-primary', 'bg-opacity-10', 'border-primary');
+    });
+
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.classList.remove('bg-primary', 'bg-opacity-10', 'border-primary');
+    });
+
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('bg-primary', 'bg-opacity-10', 'border-primary');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            updateFileInfo(files[0].name);
+        }
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            updateFileInfo(fileInput.files[0].name);
+        }
+    });
+
+    function updateFileInfo(name) {
+        fileInfo.innerHTML = `
+            <div class="text-success scale-up">
+                <i class="fas fa-check-circle fa-4x mb-3"></i>
+                <h5 class="fw-bold">${name}</h5>
+                <p class="small text-muted mb-0">Ready for processing</p>
+            </div>
+        `;
+    }
+</script>
+
+<style>
+    .border-dashed {
+        border-style: dashed !important;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .scale-up {
+        animation: scaleUp 0.3s ease-out forwards;
+    }
+
+    @keyframes scaleUp {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}

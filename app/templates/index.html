@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row min-vh-100 align-items-center">
+    <div class="col-lg-6">
+        <h1 class="display-3 fw-bold text-dark mb-4">Enterprise AI <span class="text-primary">Business
+                Intelligence</span></h1>
+        <p class="lead text-secondary mb-5">
+            Unlock the power of your data with automated EDA, ML forecasting, and natural language querying.
+            Build production-ready reports and detect anomalies in real-time.
+        </p>
+        <div class="d-grid gap-3 d-sm-flex">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-5 rounded-pill shadow">Start Free
+                Trial</a>
+            <a href="#features" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">Learn More</a>
+        </div>
+        <div class="mt-5 d-flex gap-4">
+            <div class="text-center">
+                <h4 class="fw-bold mb-0">99%</h4>
+                <small class="text-muted">Accuracy</small>
+            </div>
+            <div class="vr"></div>
+            <div class="text-center">
+                <h4 class="fw-bold mb-0">500+</h4>
+                <small class="text-muted">Users</small>
+            </div>
+            <div class="vr"></div>
+            <div class="text-center">
+                <h4 class="fw-bold mb-0">24/7</h4>
+                <small class="text-muted">Support</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 d-none d-lg-block">
+        <div class="position-relative">
+            <div class="bg-primary rounded-circle position-absolute blur-3xl opacity-10"
+                style="width: 500px; height: 500px; top: -100px; right: -100px;"></div>
+            <img src="https://via.placeholder.com/600x400/4e73df/ffffff?text=AI+BI+Dashboard+Preview"
+                alt="Dashboard Preview" class="img-fluid rounded-4 shadow-lg border">
+        </div>
+    </div>
+</div>
+
+<div id="features" class="py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Powerful AI Features</h2>
+        <p class="text-muted">Everything you need to scale your business intelligence</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm text-center">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 mx-auto mb-3" style="width: 70px;">
+                    <i class="fas fa-magic fa-2x text-primary"></i>
+                </div>
+                <h4>Auto EDA</h4>
+                <p class="text-muted">Automatically generate insights, correlations, and plots from any CSV dataset.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm text-center">
+                <div class="rounded-circle bg-success bg-opacity-10 p-3 mx-auto mb-3" style="width: 70px;">
+                    <i class="fas fa-chart-line fa-2x text-success"></i>
+                </div>
+                <h4>ML Forecasting</h4>
+                <p class="text-muted">Predict future trends using Prophet and LSTM models with industry-leading
+                    accuracy.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm text-center">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 mx-auto mb-3" style="width: 70px;">
+                    <i class="fas fa-robot fa-2x text-info"></i>
+                </div>
+                <h4>NLP Query</h4>
+                <p class="text-muted">Ask questions about your data in plain English and get instant visual answers.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

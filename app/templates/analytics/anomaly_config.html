@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-6">
+        <h1 class="h2 fw-bold text-dark">KPI Anomaly Detection</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4">
+            <h5 class="fw-bold mb-4">Detection Configuration</h5>
+            <form action="{{ url_for('analytics.anomaly_detection', dataset_id=dataset.id) }}" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Select KPI Column</label>
+                    <select name="target_col" class="form-select bg-light border-0" required>
+                        {% for col in columns %}
+                        <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Detection Method</label>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="method" id="methodIF" value="isolation_forest"
+                                checked>
+                            <label class="btn btn-outline-primary w-100 py-3" for="methodIF">
+                                <i class="fas fa-filter mb-2 d-block fa-2x"></i>
+                                Isolation Forest
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="method" id="methodZ" value="zscore">
+                            <label class="btn btn-outline-info w-100 py-3" for="methodZ">
+                                <i class="fas fa-sort-amount-up-alt mb-2 d-block fa-2x"></i>
+                                Z-Score
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                        <i class="fas fa-search me-2"></i>Analyze Anomalies
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100 p-5 bg-light">
+            <h4 class="fw-bold">How it works</h4>
+            <p class="text-muted">Anomalies are data points that deviate significantly from the rest of the dataset.
+                Detecting them helps in identifying fraud, equipment failure, or sudden market shifts.</p>
+            <div class="d-flex align-items-start mt-4">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                    <i class="fas fa-brain text-primary"></i>
+                </div>
+                <div>
+                    <h6>Isolation Forest</h6>
+                    <small class="text-muted">An ensemble algorithm that isolates anomalies by randomly selecting a
+                        feature and then randomly selecting a split value.</small>
+                </div>
+            </div>
+            <div class="d-flex align-items-start mt-4">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                    <i class="fas fa-calculator text-info"></i>
+                </div>
+                <div>
+                    <h6>Z-Score</h6>
+                    <small class="text-muted">Statistical method that measures how many standard deviations a data point
+                        is from the mean.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

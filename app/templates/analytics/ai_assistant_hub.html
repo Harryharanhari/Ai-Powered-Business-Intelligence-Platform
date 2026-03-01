@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold text-dark"><i class="fas fa-robot text-primary me-2"></i>AI Assistant Hub</h1>
+        <p class="text-muted">Chat with your data using Enterprise Intelligence</p>
+    </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+    {% for dataset in datasets %}
+    <div class="col-sm-6 col-lg-4 col-xl-3">
+        <div class="card ai-card shadow-sm h-100 animate__animated animate__fadeInUp"
+            style="animation-delay: {{ loop.index0 * 100 }}ms;">
+            <div class="card-body text-center p-4">
+                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4 p-3 shadow-inner"
+                    style="width: 80px; height: 80px;">
+                    <i class="fas fa-robot fa-2x text-primary animate__animated animate__pulse animate__infinite"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">{{ dataset.original_name }}</h5>
+                <div class="mb-3">
+                    <span class="badge bg-info-soft text-info rounded-pill px-3">
+                        <i class="fas fa-database me-1"></i> Dataset Ready
+                    </span>
+                </div>
+                <p class="text-muted small mb-4">Launch conversational intelligence for this inventory.</p>
+                <div class="d-grid mt-auto">
+                    <a href="{{ url_for('analytics.nlp_query', dataset_id=dataset.id) }}"
+                        class="btn btn-premium rounded-pill py-2">
+                        Start Chatting <i class="fas fa-comment-medical ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0 py-3 text-center opacity-75">
+                <small class="text-muted"><i class="fas fa-clock me-1"></i>Uploaded {{ dataset.upload_date.strftime('%b
+                    %d, %Y') }}</small>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm p-5 text-center animate__animated animate__zoomIn">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4 mx-auto"
+                style="width: 100px; height: 100px;">
+                <i class="fas fa-ghost fa-3x text-muted opacity-50"></i>
+            </div>
+            <h4 class="fw-bold">Your AI is Waiting...</h4>
+            <p class="text-muted mb-4">No datasets identified. Upload your business data to empower the AI Assistant.
+            </p>
+            <div class="d-grid col-sm-6 mx-auto">
+                <a href="{{ url_for('analytics.upload') }}" class="btn btn-primary rounded-pill py-3 px-4 shadow-sm">
+                    <i class="fas fa-cloud-upload-alt me-2"></i>Initialize Dataset
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .bg-info-soft {
+        background-color: rgba(54, 185, 204, 0.1);
+    }
+
+    .shadow-inner {
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+</style>
+{% endblock %}

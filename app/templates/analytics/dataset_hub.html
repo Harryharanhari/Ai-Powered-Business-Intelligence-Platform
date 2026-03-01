@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('analytics.hub') }}">Analytics Hub</a></li>
+        <li class="breadcrumb-item active">{{ dataset.original_name }}</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h1 class="fw-bold text-dark mb-1">{{ dataset.original_name }}</h1>
+        <p class="text-muted">Dataset Command Center • Integrated AI Operations</p>
+    </div>
+    <div class="btn-group">
+        <a href="{{ url_for('analytics.download_report', dataset_id=dataset.id) }}"
+            class="btn btn-outline-dark rounded-pill-start px-4">
+            <i class="fas fa-file-pdf me-2"></i>Full Report
+        </a>
+        <button class="btn btn-danger rounded-pill-end px-4">
+            <i class="fas fa-trash me-2"></i>Delete
+        </button>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- EDA Card -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 mb-4 d-inline-block">
+                    <i class="fas fa-chart-bar text-primary fa-2x"></i>
+                </div>
+                <h5 class="fw-bold">Auto EDA</h5>
+                <p class="small text-muted mb-4">Deep statistical analysis and automated data visualization.</p>
+                <a href="{{ url_for('analytics.eda', dataset_id=dataset.id) }}"
+                    class="btn btn-primary w-100 rounded-pill">Launch Analysis</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forecasting Card -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="rounded-circle bg-success bg-opacity-10 p-3 mb-4 d-inline-block">
+                    <i class="fas fa-magic text-success fa-2x"></i>
+                </div>
+                <h5 class="fw-bold">Forecasting</h5>
+                <p class="small text-muted mb-4">Predict future KPIs using Prophet and LSTM models.</p>
+                <a href="{{ url_for('forecasting.run_forecast', dataset_id=dataset.id) }}"
+                    class="btn btn-success w-100 rounded-pill">Run Predictions</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anomaly Card -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="rounded-circle bg-warning bg-opacity-10 p-3 mb-4 d-inline-block">
+                    <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                </div>
+                <h5 class="fw-bold">Anomalies</h5>
+                <p class="small text-muted mb-4">Detect outliers and business risks automatically.</p>
+                <a href="{{ url_for('analytics.anomaly_detection', dataset_id=dataset.id) }}"
+                    class="btn btn-warning text-dark w-100 rounded-pill">Monitor Risks</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- AutoML Card -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden border-top border-4 border-primary">
+            <div class="card-body p-4">
+                <div class="rounded-circle bg-dark bg-opacity-10 p-3 mb-4 d-inline-block">
+                    <i class="fas fa-trophy text-dark fa-2x"></i>
+                </div>
+                <h5 class="fw-bold">AutoML</h5>
+                <p class="small text-muted mb-4">Automatically find the best ML model for your KPIs.</p>
+                <a href="{{ url_for('analytics.run_automl', dataset_id=dataset.id) }}"
+                    class="btn btn-dark w-100 rounded-pill">Find Best Model</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Card -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 mb-4 d-inline-block">
+                    <i class="fas fa-robot text-info fa-2x"></i>
+                </div>
+                <h5 class="fw-bold">AI Assistant</h5>
+                <p class="small text-muted mb-4">Ask natural language questions about your data.</p>
+                <a href="{{ url_for('analytics.nlp_query', dataset_id=dataset.id) }}"
+                    class="btn btn-info text-white w-100 rounded-pill">Chat with Data</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Recent Operations History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for forecast in forecasts %}
+                    <div class="list-group-item py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-magic text-success me-2"></i>
+                                <strong>Forecast Executed</strong> ({{ forecast.target_col }})
+                            </div>
+                            <small class="text-muted">{{ forecast.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    {% for anomaly in anomalies %}
+                    <div class="list-group-item py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                <strong>Anomalies Detected</strong> ({{ anomaly.anomaly_count }} found)
+                            </div>
+                            <small class="text-muted">{{ anomaly.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    {% if not forecasts and not anomalies %}
+                    <div class="p-4 text-center text-muted">No recent operations for this dataset.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 bg-dark text-white">
+            <h5 class="fw-bold">Dataset Quick Stats</h5>
+            <hr class="opacity-25">
+            <div class="mb-3">
+                <small class="text-muted d-block uppercase small fw-bold">Size on Disk</small>
+                <span>N/A</span>
+            </div>
+            <div class="mb-3">
+                <small class="text-muted d-block uppercase small fw-bold">Total AI Queries</small>
+                <span>{{ queries|length }}</span>
+            </div>
+            <div>
+                <small class="text-muted d-block uppercase small fw-bold">Risk Score</small>
+                <span class="text-success">Low</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

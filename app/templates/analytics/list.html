@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 fw-bold text-dark">My Datasets</h1>
+    <a href="{{ url_for('analytics.upload') }}" class="btn btn-primary rounded-pill px-4">
+        <i class="fas fa-plus me-2"></i>New Dataset
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Original Name</th>
+                        <th>Upload Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dataset in datasets %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-file-csv text-primary fa-2x me-3"></i>
+                                <div>
+                                    <div class="fw-bold">{{ dataset.original_name }}</div>
+                                    <small class="text-muted">{{ (dataset.filename)|truncate(30) }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ dataset.upload_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('analytics.eda', dataset_id=dataset.id) }}"
+                                    class="btn btn-sm btn-outline-primary" title="Analyze">
+                                    <i class="fas fa-chart-bar"></i>
+                                </a>
+                                <a href="{{ url_for('forecasting.run_forecast', dataset_id=dataset.id) }}"
+                                    class="btn btn-sm btn-outline-success" title="Forecast">
+                                    <i class="fas fa-magic"></i>
+                                </a>
+                                <a href="{{ url_for('analytics.anomaly_detection', dataset_id=dataset.id) }}"
+                                    class="btn btn-sm btn-outline-warning" title="Detect Anomalies">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </a>
+                                <a href="{{ url_for('analytics.nlp_query', dataset_id=dataset.id) }}"
+                                    class="btn btn-sm btn-outline-info" title="AI Assistant">
+                                    <i class="fas fa-robot"></i>
+                                </a>
+                                <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="fas fa-folder-open fa-3x mb-3"></i>
+                                <p>No datasets found. Start by uploading one!</p>
+                                <a href="{{ url_for('analytics.upload') }}"
+                                    class="btn btn-primary rounded-pill px-4">Upload Now</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

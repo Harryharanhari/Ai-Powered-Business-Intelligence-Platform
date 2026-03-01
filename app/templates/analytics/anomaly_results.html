@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold text-dark">Anomaly Report</h1>
+        <p class="text-muted mb-0">KPI: <span class="badge bg-primary">{{ target_col }}</span> | Method: <span
+                class="badge bg-info text-dark text-uppercase">{{ summary.method_used }}</span></p>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-outline-primary" onclick="window.print()"><i class="fas fa-download me-2"></i>Download
+            Report</button>
+        <a href="{{ url_for('analytics.anomaly_detection', dataset_id=dataset.id) }}" class="btn btn-primary"><i
+                class="fas fa-redo me-2"></i>Re-analyze</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm h-100 p-4">
+            <h5 class="fw-bold mb-3"><i class="fas fa-microscope text-primary me-2"></i>Detection Analysis</h5>
+            <p class="text-muted">{{ summary.explanation }}</p>
+            <div class="alert alert-light border-0 mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Significant anomalies identified at index points:
+                <strong>{{ summary.significant_indices|join(', ') }}</strong>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div
+            class="card border-0 shadow-sm p-4 text-center bg-danger bg-opacity-10 h-100 border-start border-danger border-5">
+            <small class="text-danger text-uppercase fw-bold">Critical Outliers</small>
+            <h1 class="fw-bold text-danger mb-0">{{ summary.total_anomalies }}</h1>
+            <p class="text-muted small mt-2">Anomaly Rate: {{ summary.anomaly_percentage|round(2) }}%</p>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0 fw-bold">Anomaly Visualization Intelligence</h5>
+    </div>
+    <div class="card-body">
+        <div id="anomalyPlot" style="height: 500px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    const plotData = {{ plot_json| safe }};
+    const layout = plotData.layout;
+    layout.autosize = true;
+    layout.margin = { l: 50, r: 30, t: 50, b: 50 };
+    Plotly.newPlot('anomalyPlot', plotData.data, layout, {
+        responsive: true,
+        displayModeBar: true,
+        modeBarButtonsToRemove: ['lasso2d', 'select2d']
+    });
+</script>
+{% endblock %}

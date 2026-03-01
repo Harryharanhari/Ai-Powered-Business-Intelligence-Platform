@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold text-dark">Predictive Central</h1>
+        <p class="text-muted">Enterprise-grade time-serie forecasting and trend analysis</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm border-start border-success border-5 mb-5 bg-success bg-opacity-10">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-md-9">
+                <h5 class="fw-bold text-success">Select a Dataset to Begin Prediction</h5>
+                <p class="mb-0 text-dark opacity-75">Choose from your active inventories to run Prophet or LSTM models
+                    and gain future insights.</p>
+            </div>
+            <div class="col-md-3 text-end">
+                <i class="fas fa-magic fa-3x text-success opacity-25"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for dataset in datasets %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card border-0 shadow-sm h-100 hover-lift">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                        <i class="fas fa-database text-success"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h6 class="fw-bold text-dark mb-0 text-truncate">{{ dataset.original_name }}</h6>
+                        <small class="text-muted">Uploaded {{ dataset.upload_date.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('forecasting.run_forecast', dataset_id=dataset.id) }}"
+                        class="btn btn-success w-100 rounded-pill shadow-sm">
+                        Start Forecasting <i class="fas fa-chevron-right ms-2 small"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <div class="text-muted">
+            <i class="fas fa-folder-open fa-3x mb-3"></i>
+            <p>No datasets found for forecasting. Please upload one first.</p>
+            <a href="{{ url_for('analytics.upload') }}" class="btn btn-primary rounded-pill px-4">Upload Dataset</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .hover-lift {
+        transition: transform 0.2s;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
